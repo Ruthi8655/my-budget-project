@@ -1,0 +1,12 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+shared/data/expenses.json
+shared/data/budgets.json
+shared/data/memory.json
+results/*.json
+*.db
+*.sqlite*
+.amazonq/

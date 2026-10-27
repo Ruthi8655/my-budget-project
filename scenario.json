@@ -1,0 +1,42 @@
+{
+  "description": "Multi-turn budget assistant scenario — 7 turns, 2 sessions",
+  "sessions": [
+    {
+      "session_id": "session-1",
+      "turns": [
+        {"turn": 1, "user": "Set my food budget to 1500 ILS per month."},
+        {"turn": 2, "user": "I spent 45 USD on groceries today."},
+        {"turn": 3, "user": "Add 120 ILS for transport - monthly bus pass."},
+        {"turn": 4, "user": "What did I spend this month?"}
+      ]
+    },
+    {
+      "session_id": "session-2",
+      "fresh_agent": true,
+      "turns": [
+        {"turn": 5, "user": "Search for grocery expenses."},
+        {"turn": 6, "user": "How much is 200 EUR in ILS?"},
+        {"turn": 7, "user": "Show me my food budget limit."}
+      ]
+    }
+  ],
+  "checks": [
+    {"id": "c1", "description": "food budget limit persisted to disk",
+     "type": "budgets_file", "key": "food", "op": "eq", "value": 1500.0},
+    {"id": "c2", "description": "at least one expense recorded",
+     "type": "expenses_count", "op": "gte", "value": 1},
+    {"id": "c3", "description": "transport expense exists",
+     "type": "expenses_category", "category": "transport", "op": "gte", "value": 1},
+    {"id": "c4", "description": "session-2 loaded expenses from disk (search returned results)",
+     "type": "turn_answer_contains", "session_id": "session-2", "turn": 5,
+     "substring": "grocer"},
+    {"id": "c5", "description": "EUR conversion answer contains ILS",
+     "type": "turn_answer_contains", "session_id": "session-2", "turn": 6,
+     "substring": "ILS"},
+    {"id": "c6", "description": "food budget answer in session-2 references 1500",
+     "type": "turn_answer_contains", "session_id": "session-2", "turn": 7,
+     "substring": "1500"},
+    {"id": "c7", "description": "total model calls across all turns >= 7",
+     "type": "total_model_calls", "op": "gte", "value": 7}
+  ]
+}
